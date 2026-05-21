@@ -1,0 +1,59 @@
+version: "2"
+
+run:
+  timeout: 3m
+
+linters:
+  default: all
+  disable:
+    - sqlclosecheck # not relevant (SQL)
+    - rowserrcheck # not relevant (SQL)
+    - cyclop # duplicate of gocyclo
+    - bodyclose # Too many false positives: https://github.com/timakin/bodyclose/issues/30
+    - dupl
+    - testpackage
+    - tparallel
+    - paralleltest
+    - nlreturn
+    - wsl
+    - wsl_v5
+    - revive
+    - exhaustive
+    - exhaustruct
+    - err113
+    - wrapcheck
+    - noctx
+    - lll
+    - mnd
+    - forbidigo
+    - varnamelen
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+    gocyclo:
+      min-complexity: 12
+    goconst:
+      min-len: 5
+      min-occurrences: 4
+    misspell:
+      locale: US
+    funlen:
+      lines: -1
+      statements: 50
+    godox:
+      keywords:
+        - FIXME
+    gofumpt:
+      extra-rules: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    - path: (.+)_test.go
+      linters:
+        - goconst
+        - funlen
+        - godot
