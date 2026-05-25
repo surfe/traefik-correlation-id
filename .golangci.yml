@@ -27,6 +27,7 @@ linters:
     - mnd
     - forbidigo
     - varnamelen
+    - intrange
   settings:
     govet:
       enable-all: true
