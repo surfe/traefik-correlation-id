@@ -28,6 +28,7 @@ linters:
     - forbidigo
     - varnamelen
     - intrange
+    - modernize
   settings:
     govet:
       enable-all: true
