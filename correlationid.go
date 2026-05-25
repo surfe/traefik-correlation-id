@@ -9,14 +9,14 @@ import (
 
 // Config holds the plugin configuration.
 type Config struct {
-	// HeaderName is the header used to carry the correlation ID (default: X-Correlation-Id).
+	// HeaderName is the header used to carry the correlation ID (default: correlation-id).
 	HeaderName string `json:"headerName,omitempty"`
 }
 
 // CreateConfig returns the default plugin configuration.
 func CreateConfig() *Config {
 	return &Config{
-		HeaderName: "X-Correlation-Id",
+		HeaderName: "correlation-id",
 	}
 }
 
@@ -29,7 +29,7 @@ type correlationID struct {
 // New creates a new correlation-Id middleware instance.
 func New(_ context.Context, next http.Handler, cfg *Config, name string) (http.Handler, error) {
 	if cfg.HeaderName == "" {
-		cfg.HeaderName = "X-Correlation-Id"
+		cfg.HeaderName = "correlation-id"
 	}
 	return &correlationID{
 		next:       next,

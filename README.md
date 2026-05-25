@@ -6,7 +6,7 @@ A [Traefik](https://traefik.io) middleware plugin that ensures every incoming HT
 
 - Generates a cryptographically random UUID v4 when the header is absent
 - Passes existing headers through unchanged, preserving IDs set by upstream callers
-- Configurable header name (default: `X-Correlation-Id`)
+- Configurable header name (default: `correlation-id`)
 - Zero external dependencies
 
 ## Installation
@@ -42,7 +42,7 @@ The included `docker-compose.yml` sets this up automatically.
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `headerName` | `string` | `X-Correlation-Id` | Name of the header to read and inject |
+| `headerName` | `string` | `correlation-id` | Name of the header to read and inject |
 
 ### Static configuration (traefik.yml)
 
@@ -64,7 +64,7 @@ http:
     correlation:
       plugin:
         correlation:
-          headerName: X-Correlation-Id
+          headerName: correlation-id
 
   routers:
     my-router:
@@ -76,7 +76,7 @@ http:
 
 ```yaml
 labels:
-  - "traefik.http.middlewares.correlation.plugin.correlation.headerName=X-Correlation-Id"
+  - "traefik.http.middlewares.correlation.plugin.correlation.headerName=correlation-id"
   - "traefik.http.routers.my-service.middlewares=correlation@docker"
 ```
 
@@ -104,11 +104,11 @@ Then verify the header is injected:
 
 ```bash
 curl -H "Host: whoami.localhost" http://localhost
-# Response will contain: X-Correlation-Id: <uuid>
+# Response will contain: correlation-id: <uuid>
 
 # Existing header is preserved:
-curl -H "Host: whoami.localhost" -H "X-Correlation-Id: my-trace-id" http://localhost
-# Response will contain: X-Correlation-Id: my-trace-id
+curl -H "Host: whoami.localhost" -H "correlation-id: my-trace-id" http://localhost
+# Response will contain: correlation-id: my-trace-id
 ```
 
 The Traefik dashboard is available at [http://localhost:8080](http://localhost:8080).

@@ -12,8 +12,8 @@ var uuidRegex = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab]
 
 func TestCreateConfig(t *testing.T) {
 	cfg := CreateConfig()
-	if cfg.HeaderName != "X-Correlation-Id" {
-		t.Errorf("default HeaderName = %q, want %q", cfg.HeaderName, "X-Correlation-Id")
+	if cfg.HeaderName != "correlation-id" {
+		t.Errorf("default HeaderName = %q, want %q", cfg.HeaderName, "correlation-id")
 	}
 }
 
@@ -27,15 +27,15 @@ func TestNew_defaultsEmptyHeaderName(t *testing.T) {
 	if !ok {
 		t.Fatal("expected *correlationID")
 	}
-	if mid.headerName != "X-Correlation-Id" {
-		t.Errorf("headerName = %q, want %q", mid.headerName, "X-Correlation-Id")
+	if mid.headerName != "correlation-id" {
+		t.Errorf("headerName = %q, want %q", mid.headerName, "correlation-id")
 	}
 }
 
 func TestServeHTTP_setsHeaderWhenAbsent(t *testing.T) {
 	var capturedHeader string
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		capturedHeader = r.Header.Get("X-Correlation-Id")
+		capturedHeader = r.Header.Get("correlation-id")
 	})
 
 	cfg := CreateConfig()
@@ -56,14 +56,14 @@ func TestServeHTTP_preservesExistingHeader(t *testing.T) {
 	const existing = "my-correlation-id"
 	var capturedHeader string
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		capturedHeader = r.Header.Get("X-Correlation-Id")
+		capturedHeader = r.Header.Get("correlation-id")
 	})
 
 	cfg := CreateConfig()
 	h, _ := New(context.Background(), next, cfg, "test")
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	req.Header.Set("X-Correlation-Id", existing)
+	req.Header.Set("correlation-id", existing)
 	h.ServeHTTP(httptest.NewRecorder(), req)
 
 	if capturedHeader != existing {
@@ -91,7 +91,7 @@ func TestServeHTTP_customHeaderName(t *testing.T) {
 func TestServeHTTP_uniqueIDs(t *testing.T) {
 	seen := make(map[string]bool)
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		id := r.Header.Get("X-Correlation-Id")
+		id := r.Header.Get("correlation-id")
 		if seen[id] {
 			t.Errorf("duplicate correlation ID generated: %q", id)
 		}

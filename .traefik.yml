@@ -3,7 +3,7 @@ type: middleware
 
 import: github.com/surfe/traefik-correlation-id
 
-summary: Injects an X-Correlation-Id header into every request, generating a UUID v4 if one is not already present.
+summary: Injects an correlation-id header into every request, generating a UUID v4 if one is not already present.
 
 testData:
-  headerName: X-Correlation-Id
+  headerName: correlation-id
