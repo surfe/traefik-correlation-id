@@ -101,14 +101,14 @@ func TestServeHTTP_uniqueIDs(t *testing.T) {
 	cfg := CreateConfig()
 	h, _ := New(context.Background(), next, cfg, "test")
 
-	for range 100 {
+	for i := 0; i < 100; i++ {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		h.ServeHTTP(httptest.NewRecorder(), req)
 	}
 }
 
 func TestNewUUID_format(t *testing.T) {
-	for range 20 {
+	for i := 0; i < 20; i++ {
 		id := newUUID()
 		if !uuidRegex.MatchString(id) {
 			t.Errorf("newUUID() = %q, does not match UUID v4 pattern", id)
