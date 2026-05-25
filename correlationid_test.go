@@ -35,7 +35,7 @@ func TestNew_defaultsEmptyHeaderName(t *testing.T) {
 func TestServeHTTP_setsHeaderWhenAbsent(t *testing.T) {
 	var capturedHeader string
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		capturedHeader = r.Header.Get("correlation-id")
+		capturedHeader = r.Header.Get("correlation-id") //nolint:canonicalheader
 	})
 
 	cfg := CreateConfig()
@@ -56,14 +56,14 @@ func TestServeHTTP_preservesExistingHeader(t *testing.T) {
 	const existing = "my-correlation-id"
 	var capturedHeader string
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		capturedHeader = r.Header.Get("correlation-id")
+		capturedHeader = r.Header.Get("correlation-id") //nolint:canonicalheader
 	})
 
 	cfg := CreateConfig()
 	h, _ := New(context.Background(), next, cfg, "test")
 
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
-	req.Header.Set("correlation-id", existing)
+	req.Header.Set("correlation-id", existing) //nolint:canonicalheader
 	h.ServeHTTP(httptest.NewRecorder(), req)
 
 	if capturedHeader != existing {
@@ -91,7 +91,7 @@ func TestServeHTTP_customHeaderName(t *testing.T) {
 func TestServeHTTP_uniqueIDs(t *testing.T) {
 	seen := make(map[string]bool)
 	next := http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
-		id := r.Header.Get("correlation-id")
+		id := r.Header.Get("correlation-id") //nolint:canonicalheader
 		if seen[id] {
 			t.Errorf("duplicate correlation ID generated: %q", id)
 		}
